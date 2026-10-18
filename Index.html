@@ -1,0 +1,396 @@
+
+<!DOCTYPE html>
+<html lang="no">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Rush – Reklamestorskjerm</title>
+
+<style>
+* {
+  box-sizing: border-box;
+}
+
+html, body {
+  margin: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background: #000;
+  color: white;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+#app {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  height: 100dvh;
+  overflow: hidden;
+  background: #000;
+}
+
+/* Reklamene */
+#ads {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border: 0;
+  display: block;
+  background: #000;
+  transform: scale(1.16);
+  transform-origin: center center;
+}
+
+@media (max-aspect-ratio: 4/3) {
+  #ads {
+    transform: scale(1.22);
+  }
+}
+
+/* Overlegg oppå reklamen */
+#overlay {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 5px 5px 0;
+  background: linear-gradient(
+    to bottom,
+    rgba(0,0,0,.12) 0%,
+    transparent 15%,
+    transparent 72%,
+    rgba(0,0,0,.20) 100%
+  );
+}
+
+/* Klokke og dato */
+#bar {
+  display: flex;
+  justify-content: flex-end;
+  align-items: flex-start;
+}
+
+#clockblock {
+  text-align: right;
+  text-shadow: 0 1px 4px #000;
+}
+
+#clock {
+  font-size: clamp(10px, 1vw, 15px);
+  font-weight: 900;
+  font-variant-numeric: tabular-nums;
+}
+
+#date {
+  font-size: clamp(6px, .55vw, 9px);
+  color: white;
+}
+
+/* Fire bokser helt nederst */
+#cards {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: clamp(3px, .5vw, 8px);
+  width: 100%;
+  height: clamp(40px, 7vh, 62px);
+  margin: 0;
+  padding: 0;
+}
+
+.card {
+  min-width: 0;
+  height: 100%;
+  border-radius: 5px;
+  padding: clamp(3px, .45vw, 6px);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  overflow: hidden;
+  border: 1px solid #ffffff66;
+  box-shadow: 0 2px 9px #0005;
+}
+
+.name {
+  font-size: clamp(7px, .72vw, 11px);
+  font-weight: 900;
+}
+
+.status {
+  font-size: clamp(5px, .48vw, 7px);
+  font-weight: 900;
+  letter-spacing: .04em;
+  margin-bottom: 2px;
+}
+
+.remaining {
+  font-size: clamp(9px, .95vw, 14px);
+  font-weight: 900;
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+
+.detail {
+  font-size: clamp(5px, .48vw, 7px);
+  font-weight: 700;
+  margin-top: 2px;
+}
+
+.pink {
+  background: rgba(237,22,143,.94);
+  color: white;
+}
+
+.red {
+  background: rgba(237,48,48,.94);
+  color: white;
+}
+
+.silver {
+  background: rgba(192,192,192,.95);
+  color: #191919;
+}
+
+.green {
+  background: rgba(34,185,92,.95);
+  color: #101010;
+}
+
+.orange {
+  background: rgba(255,140,32,.95);
+  color: #191919;
+}
+
+.blue {
+  background: rgba(22,136,255,.95);
+  color: white;
+}
+
+.yellow {
+  background: rgba(255,227,51,.96);
+  color: #191919;
+}
+
+.purple {
+  background: rgba(166,77,255,.95);
+  color: white;
+}
+
+.black {
+  background: rgba(36,36,36,.95);
+  color: white;
+}
+
+.white {
+  background: rgba(241,241,241,.96);
+  color: #191919;
+}
+
+.done {
+  background: rgba(32,33,39,.94);
+  color: white;
+  border: 1px solid #ffffff88;
+}
+
+@media (max-width: 700px) {
+  #overlay {
+    padding: 4px 4px 0;
+  }
+
+  #cards {
+    height: clamp(36px, 8vh, 52px);
+    gap: 3px;
+  }
+
+  .card {
+    padding: 3px;
+    border-radius: 4px;
+  }
+
+  .name {
+    font-size: clamp(7px, 1.8vw, 10px);
+  }
+
+  .status, .detail {
+    font-size: clamp(5px, .9vw, 7px);
+  }
+
+  .remaining {
+    font-size: clamp(8px, 1.8vw, 12px);
+  }
+}
+</style>
+</head>
+
+<body>
+<main id="app">
+
+<iframe
+  id="ads"
+  title="Rush reklamer"
+  src="https://docs.google.com/presentation/d/e/2PACX-1vQtMPcDOLCuCXQIKQdKwSS-7VStxh-4RX3l9DOoMgpACGnM1oKk8X1jC-d2-BnZTjv3tC0Q068ip7XS/embed?start=true&loop=true&delayms=10000"
+  allowfullscreen>
+</iframe>
+
+<div id="overlay">
+
+  <header id="bar">
+    <div id="clockblock">
+      <div id="clock">00:00:00</div>
+      <div id="date"></div>
+    </div>
+  </header>
+
+  <section id="cards"></section>
+
+</div>
+</main>
+
+<script>
+const colors = [
+  {name:"ROSA", cls:"pink"},
+  {name:"RØD", cls:"red"},
+  {name:"SØLV", cls:"silver"},
+  {name:"GRØNN", cls:"green"},
+  {name:"ORANSJE", cls:"orange"},
+  {name:"BLÅ", cls:"blue"},
+  {name:"GUL", cls:"yellow"},
+  {name:"LILLA", cls:"purple"},
+  {name:"SVART", cls:"black"},
+  {name:"HVIT", cls:"white"}
+];
+
+/* Første ferdigtid 10:30, deretter hvert 30. minutt */
+const firstFinish = 630;
+const step = 30;
+
+function parts(date) {
+  return Object.fromEntries(
+    new Intl.DateTimeFormat("en-GB", {
+      timeZone: "Europe/Oslo",
+      hour: "2-digit",
+      minute: "2-digit",
+      second: "2-digit",
+      hourCycle: "h23"
+    }).formatToParts(date).map(part => [part.type, part.value])
+  );
+}
+
+function fmt(seconds) {
+  seconds = Math.max(0, Math.floor(seconds));
+
+  const hours = Math.floor(seconds / 3600);
+  const minutes = Math.floor((seconds % 3600) / 60);
+  const secs = seconds % 60;
+
+  return hours
+    ? `${hours}t ${String(minutes).padStart(2,"0")}m`
+    : `${String(minutes).padStart(2,"0")}:${String(secs).padStart(2,"0")}`;
+}
+
+function render() {
+  const now = new Date();
+  const p = parts(now);
+  const minute = Number(p.hour) * 60 + Number(p.minute);
+
+  document.getElementById("clock").textContent =
+    `${p.hour}:${p.minute}:${p.second}`;
+
+  document.getElementById("date").textContent =
+    new Intl.DateTimeFormat("nb-NO", {
+      timeZone: "Europe/Oslo",
+      weekday: "long",
+      day: "numeric",
+      month: "long"
+    }).format(now);
+
+  const k = Math.floor((minute - firstFinish) / step);
+
+  let upcoming = [];
+  let last = null;
+  let finished = false;
+
+  if (minute < firstFinish) {
+    for (let i = 0; i < 4; i++) {
+      upcoming.push({
+        i,
+        finish: firstFinish + i * step,
+        seconds: (firstFinish + i * step - minute) * 60
+          - Number(p.second)
+      });
+    }
+  } else {
+    finished =
+      (((minute - firstFinish) - k * step) * 60
+      + Number(p.second)) < 120;
+
+    last = ((k % colors.length) + colors.length) % colors.length;
+
+    for (
+      let i = k + 1;
+      i < k + 1 + (finished ? 3 : 4);
+      i++
+    ) {
+      upcoming.push({
+        i,
+        finish: firstFinish + i * step,
+        seconds: (firstFinish + i * step - minute) * 60
+          - Number(p.second)
+      });
+    }
+  }
+
+  const container = document.getElementById("cards");
+  container.innerHTML = "";
+
+  if (finished && last !== null) {
+    const color = colors[last];
+    const element = document.createElement("article");
+
+    element.className = "card done";
+    element.innerHTML = `
+      <div class="name">${color.name}</div>
+      <div>
+        <div class="status">STATUS</div>
+        <div class="remaining">FERDIG</div>
+        <div class="detail">Ferdigtid passert</div>
+      </div>
+    `;
+
+    container.appendChild(element);
+  }
+
+  upcoming.forEach(item => {
+    const color =
+      colors[((item.i % colors.length) + colors.length) % colors.length];
+
+    const end = ((item.finish % 1440) + 1440) % 1440;
+    const time =
+      `${String(Math.floor(end / 60)).padStart(2,"0")}:` +
+      `${String(end % 60).padStart(2,"0")}`;
+
+    const element = document.createElement("article");
+    element.className = `card ${color.cls}`;
+
+    element.innerHTML = `
+      <div class="name">${color.name}</div>
+      <div>
+        <div class="status">FERDIG OM</div>
+        <div class="remaining">${fmt(item.seconds)}</div>
+        <div class="detail">Ferdig kl. ${time}</div>
+      </div>
+    `;
+
+    container.appendChild(element);
+  });
+}
+
+render();
+setInterval(render, 1000);
+</script>
+
+</body>
+</html>
